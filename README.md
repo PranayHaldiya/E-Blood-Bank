@@ -37,16 +37,20 @@ A comprehensive web-based solution for managing blood bank operations, facilitat
 ## 📸 Screenshots
 
 ### Homepage
-![homepage snap](https://github.com/PranayHaldiya/bloodbankmanagement/blob/main/static/screenshot/homepage.png?raw=true)
+![homepage snap](https://github.com/PranayHaldiya/E-Blood-Bank/blob/main/static/Screenshot%202025-03-06%20174214.png)
 
 ### Admin Dashboard
-![dashboard snap](https://github.com/PranayHaldiya/bloodbankmanagement/blob/main/static/screenshot/admin%20dashboard.png?raw=true)
+![dashboard snap](https://github.com/PranayHaldiya/E-Blood-Bank/blob/main/static/Screenshot%202025-04-12%20164440.png)
 
 ### Blood Donation 
-![invoice snap](https://github.com/PranayHaldiya/bloodbankmanagement/blob/main/static/screenshot/blood%20donation.png?raw=true)
+![invoice snap](https://github.com/PranayHaldiya/E-Blood-Bank/blob/main/static/Screenshot%202025-03-22%20155024.png)
 
 ### Blood Request
-![doctor snap](https://github.com/PranayHaldiya/bloodbankmanagement/blob/main/static/screenshot/blood%20request.png?raw=true)
+![doctor snap](https://github.com/PranayHaldiya/E-Blood-Bank/blob/main/static/Screenshot%202025-04-12%20164507.png)
+
+![doctor snap](https://github.com/PranayHaldiya/E-Blood-Bank/blob/main/static/Screenshot%202025-04-19%20153624.png)
+
+![doctor snap](https://github.com/PranayHaldiya/E-Blood-Bank/blob/main/static/Screenshot%202025-04-19%20153650.png)
 
 ## 🚀 Getting Started
 
