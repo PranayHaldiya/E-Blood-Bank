@@ -1,0 +1,40 @@
+from django.contrib import admin
+from django.urls import path, include
+from django.contrib.auth.views import LogoutView, LoginView
+from blood import views
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('donor/', include('donor.urls')),
+    path('patient/', include('patient.urls')),
+    
+    # Authentication URLs
+    path('', views.home_view, name='home'),
+    path('login/', LoginView.as_view(template_name='blood/login.html', redirect_authenticated_user=True), name='login'),
+    path('logout/', LogoutView.as_view(template_name='blood/logout.html', next_page='home'), name='logout'),
+    
+    # Admin URLs
+    path('adminlogin/', LoginView.as_view(template_name='blood/adminlogin.html'), name='adminlogin'),
+    path('afterlogin/', views.afterlogin_view, name='afterlogin'),
+    path('admin-dashboard/', views.admin_dashboard_view, name='admin-dashboard'),
+    path('admin-blood/', views.admin_blood_view, name='admin-blood'),
+    path('admin-donor/', views.admin_donor_view, name='admin-donor'),
+    path('admin-patient/', views.admin_patient_view, name='admin-patient'),
+    path('update-donor/<int:pk>/', views.update_donor_view, name='update-donor'),
+    path('delete-donor/<int:pk>/', views.delete_donor_view, name='delete-donor'),
+    path('admin-request/', views.admin_request_view, name='admin-request'),
+    path('update-patient/<int:pk>/', views.update_patient_view, name='update-patient'),
+    path('delete-patient/<int:pk>/', views.delete_patient_view, name='delete-patient'),
+    path('admin-donation/', views.admin_donation_view, name='admin-donation'),
+    path('approve-donation/<int:pk>/', views.approve_donation_view, name='approve-donation'),
+    path('reject-donation/<int:pk>/', views.reject_donation_view, name='reject-donation'),
+    path('admin-request-history/', views.admin_request_history_view, name='admin-request-history'),
+    path('download-request-history-pdf/', views.download_request_history_pdf, name='download-request-history-pdf'),
+    path('download-donor-list-pdf/', views.download_donor_list_pdf, name='download-donor-list-pdf'),
+    path('download-patient-list-pdf/', views.download_patient_list_pdf, name='download-patient-list-pdf'),
+    path('update-approve-status/<int:pk>/', views.update_approve_status_view, name='update-approve-status'),
+    path('update-reject-status/<int:pk>/', views.update_reject_status_view, name='update-reject-status'),
+    path('contact/', views.contact_view, name='contact'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

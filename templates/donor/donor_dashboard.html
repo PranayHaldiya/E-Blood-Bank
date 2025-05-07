@@ -1,0 +1,254 @@
+{% extends 'donor/donorbase.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h4 class="text-primary mb-4">
+                <i class="fas fa-tachometer-alt mr-2"></i>Donor Dashboard
+            </h4>
+        </div>
+    </div>
+
+    <!-- Blood Request Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="text-muted mb-3">
+                <i class="fas fa-paper-plane mr-2"></i>Blood Request Statistics
+            </h5>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-paper-plane fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Total Requests</h5>
+                    <h3 class="card-text text-primary">{{requestmade}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-clock fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="card-title">Pending</h5>
+                    <h3 class="card-text text-warning">{{requestpending}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Approved</h5>
+                    <h3 class="card-text text-success">{{requestapproved}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-times-circle fa-3x text-danger"></i>
+                    </div>
+                    <h5 class="card-title">Rejected</h5>
+                    <h3 class="card-text text-danger">{{requestrejected}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Donation Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="text-muted mb-3">
+                <i class="fas fa-tint mr-2"></i>Blood Donation Statistics
+            </h5>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-tint fa-3x text-danger"></i>
+                    </div>
+                    <h5 class="card-title">Total Donations</h5>
+                    <h3 class="card-text text-danger">{{totaldonations}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-clock fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="card-title">Pending</h5>
+                    <h3 class="card-text text-warning">{{pendingdonations}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Approved</h5>
+                    <h3 class="card-text text-success">{{approveddonations}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-times-circle fa-3x text-danger"></i>
+                    </div>
+                    <h5 class="card-title">Rejected</h5>
+                    <h3 class="card-text text-danger">{{rejecteddonations}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Donations Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-history mr-2"></i>Recent Blood Donations
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Blood Group</th>
+                                    <th>Units</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for donation in donations %}
+                                <tr>
+                                    <td>{{donation.date}}</td>
+                                    <td>
+                                        <span class="badge badge-danger">
+                                            <i class="fas fa-tint mr-1"></i>{{donation.bloodgroup}}
+                                        </span>
+                                    </td>
+                                    <td>{{donation.unit}}</td>
+                                    <td>
+                                        {% if donation.status == "Approved" %}
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check-circle mr-1"></i>Approved
+                                        </span>
+                                        {% elif donation.status == "Rejected" %}
+                                        <span class="badge badge-danger">
+                                            <i class="fas fa-times-circle mr-1"></i>Rejected
+                                        </span>
+                                        {% else %}
+                                        <span class="badge badge-warning">
+                                            <i class="fas fa-clock mr-1"></i>Pending
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-size: 85%;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 15px;
+        }
+
+        .card {
+            margin-bottom: 15px;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .table {
+            font-size: 14px;
+        }
+
+        .badge {
+            font-size: 75%;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Table Responsive Styles */
+    .table-responsive {
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    /* Status Badge Colors */
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+</style>
+{% endblock content %}

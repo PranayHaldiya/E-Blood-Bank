@@ -1,0 +1,421 @@
+{% extends 'patient/patientbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{%load static%}
+
+<!-- Include Razorpay JavaScript SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow border-0">
+        <div class="card-header bg-warning text-white">
+            <h4 class="mb-0 font-weight-bold"><i class="fas fa-tasks mr-2"></i>Current Blood Requests</h4>
+        </div>
+        <div class="card-body">
+            {% if blood_request %}
+            <div class="table-responsive">
+                <table class="table table-light table-hover table-bordered table-striped">
+                    <thead class="bg-info text-white">
+                        <tr>
+                            <th scope="col">Patient Name</th>
+                            <th scope="col">Patient Age</th>
+                            <th scope="col">Reason</th>
+                            <th scope="col">Blood Group</th>
+                            <th scope="col">Unit</th>
+                            <th scope="col">Cost Per Unit</th>
+                            <th scope="col">Total Cost</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in blood_request %}
+                        <tr>
+                            <td>{{t.patient_name}}</td>
+                            <td>{{t.patient_age}}</td>
+                            <td>{{t.reason}}</td>
+                            <td>{{t.bloodgroup}}</td>
+                            <td>{{t.unit}}</td>
+                            <td>{% if t.cost_at_request_display %}₹{{t.cost_at_request_display}}{% elif t.cost_at_request %}₹{{t.cost_at_request}}{% else %}-{% endif %}</td>
+                            <td>{% if t.total_cost_display %}₹{{t.total_cost_display}}{% elif t.total_cost %}₹{{t.total_cost}}{% else %}-{% endif %}</td>
+                            <td>{{t.request_date}}</td>
+                            <td>
+                                {% if t.status_label == 'Approved' %}
+                                    <span class="label success">Approved</span>
+                                {% elif t.status_label == 'Pending' %}
+                                    <span class="label info">Pending</span>
+                                {% elif t.status_label == 'Rejected' %}
+                                    <span class="label danger">Rejected</span>
+                                {% else %}
+                                    <span class="label">{{t.status_label}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if t.status_label == 'Approved' %}
+                                    {% if t.payment %}
+                                        {% if t.payment.status == 'Pending' %}
+                                            <button class="btn btn-success pay-button" 
+                                                    data-request-id="{{ t.id }}"
+                                                    data-order-id="{{ t.payment.razorpay_order_id }}"
+                                                    data-amount="{{ t.total_cost|floatformat:2|default:'0' }}"
+                                                    data-description="Payment for {{ t.bloodgroup }} blood - {{ t.unit }} units"
+                                                    data-patient-name="{{ t.patient_name }}"
+                                                    data-email=""
+                                                    data-contact="">
+                                                Pay Now
+                                            </button>
+                                            <!-- Debug button -->
+                                            <button class="btn btn-sm btn-outline-secondary check-order-button" 
+                                                    data-order-id="{{ t.payment.razorpay_order_id }}">
+                                                <i class="fas fa-bug"></i>
+                                            </button>
+                                        {% elif t.payment.status == 'Completed' %}
+                                            <span class="badge badge-success">Paid</span>
+                                            {% if t.payment.razorpay_payment_id %}
+                                                <span class="payment-info" data-toggle="tooltip" title="Payment ID: {{ t.payment.razorpay_payment_id }}">
+                                                    <i class="fas fa-info-circle text-info ml-1"></i>
+                                                </span>
+                                                <br>
+                                                <small class="text-muted">ID: {{ t.payment.razorpay_payment_id|truncatechars:10 }}</small>
+                                                {% if t.payment_date_display %}
+                                                <br>
+                                                <small class="text-muted">Date: {{ t.payment_date_display }}</small>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge badge-danger">Failed</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge badge-warning">N/A</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge badge-secondary">Awaiting Approval</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i>You don't have any pending blood requests. 
+                <a href="{% url 'make-request' %}" class="alert-link">Make a request</a> to get started.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .label {
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .success { background-color: #28a745; }  /* Green for Approved */
+    .danger { background-color: #dc3545; }   /* Red for Rejected */
+    .info { background-color: #17a2b8; }     /* Blue for Pending */
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-warning {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+    }
+    
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+    
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .card-header {
+        border-top-left-radius: 10px !important;
+        border-top-right-radius: 10px !important;
+        padding: 15px 20px;
+    }
+    
+    .bg-warning {
+        background: #f39c12 !important;
+    }
+
+    .pay-button {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .payment-info {
+        cursor: pointer;
+    }
+    
+    .text-muted {
+        color: #6c757d;
+        font-size: 0.75rem;
+    }
+    
+    /* Style payment information block */
+    td .badge.badge-success + br + small {
+        display: block;
+        margin-top: 0.25rem;
+        padding-left: 0.25rem;
+        border-left: 2px solid #28a745;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        if (typeof $().tooltip === 'function') {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+        
+        // Get all payment buttons
+        const payButtons = document.querySelectorAll('.pay-button');
+        console.log('Payment buttons found:', payButtons.length);
+        
+        // Add click event to each button
+        payButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default button behavior
+                
+                const requestId = this.getAttribute('data-request-id');
+                const orderId = this.getAttribute('data-order-id');
+                
+                console.log('Payment button clicked for request:', requestId);
+                console.log('Order ID:', orderId);
+                
+                if (!orderId) {
+                    console.error('Missing order ID');
+                    alert('Error: Missing order ID. Please try again or contact support.');
+                    return;
+                }
+                
+                // Calculate amount (ensure it's in paise - smallest Indian currency unit)
+                let amount = 0;
+                try {
+                    const rawAmount = this.getAttribute('data-amount');
+                    console.log('Raw amount:', rawAmount);
+                    amount = Math.round(parseFloat(rawAmount || '0') * 100);
+                    console.log('Converted amount (paise):', amount);
+                } catch (e) {
+                    console.error('Error parsing amount:', e);
+                    amount = 100; // Fallback to 1 INR minimum
+                }
+                
+                // Get description and other data
+                const description = this.getAttribute('data-description') || 'Blood Payment';
+                const patientName = this.getAttribute('data-patient-name') || '';
+                
+                console.log('Creating Razorpay options with:', {
+                    key: 'rzp_test_21tASGIxcgKZ3T',
+                    amount,
+                    orderId,
+                    description
+                });
+                
+                // Configure Razorpay options
+                const options = {
+                    key: 'rzp_test_21tASGIxcgKZ3T',
+                    amount: amount,
+                    currency: 'INR',
+                    name: 'Blood Bank',
+                    description: description,
+                    order_id: orderId,
+                    handler: function(response) {
+                        console.log('Payment successful, response:', response);
+                        handlePaymentSuccess(response, requestId);
+                    },
+                    prefill: {
+                        name: patientName,
+                        email: this.getAttribute('data-email') || '',
+                        contact: this.getAttribute('data-contact') || ''
+                    },
+                    theme: {
+                        color: '#F37254'
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            console.log('Payment modal dismissed by user');
+                        }
+                    }
+                };
+                
+                console.log('Razorpay options:', options);
+                
+                try {
+                    // Create new Razorpay instance
+                    const rzp = new Razorpay(options);
+                    
+                    // Set up payment failed handler
+                    rzp.on('payment.failed', function(response) {
+                        console.error('Payment failed:', response.error);
+                        alert(`Payment failed: ${response.error.description}`);
+                    });
+                    
+                    // Open Razorpay checkout
+                    rzp.open();
+                    console.log('Razorpay checkout opened');
+                    
+                } catch (error) {
+                    console.error('Error initializing Razorpay:', error);
+                    alert('Error initializing payment. Please try again or contact support.');
+                }
+            });
+        });
+        
+        // Handle successful payment
+        function handlePaymentSuccess(response, requestId) {
+            console.log('Handling successful payment for request:', requestId);
+            
+            // Send payment details to backend for verification
+            fetch(`/patient/process-payment/${requestId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                })
+            })
+            .then(response => {
+                console.log('Server response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Payment verification result:', data);
+                if (data.status === 'success') {
+                    alert('Payment successful! Your blood request has been processed.');
+                    window.location.reload();
+                } else {
+                    alert('Payment verification failed: ' + (data.message || 'Please contact support.'));
+                }
+            })
+            .catch(error => {
+                console.error('Error processing payment verification:', error);
+                alert('Error processing payment. Please try again.');
+            });
+        }
+        
+        // Helper function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Add event listener for debug buttons
+        document.querySelectorAll('.check-order-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const orderId = this.getAttribute('data-order-id');
+                console.log('Debug: Checking order ID:', orderId);
+                
+                if (!orderId) {
+                    console.error('Debug: No order ID found');
+                    alert('No order ID found');
+                    return;
+                }
+                
+                // Test with different API keys
+                const testKeys = [
+                    'rzp_test_21tASGIxcgKZ3T',  // Our current key
+                    'rzp_test_1DP5mmOlF5G5ag',  // Alternative test key 1
+                    'rzp_test_edLqErLMM2sRYh'   // Alternative test key 2
+                ];
+                
+                // Try each key
+                let successKey = null;
+                for (const key of testKeys) {
+                    try {
+                        const testOptions = {
+                            key: key,
+                            order_id: orderId,
+                            handler: function() {}
+                        };
+                        
+                        const rzpTest = new Razorpay(testOptions);
+                        console.log(`Debug: Razorpay test instance created with key ${key}`);
+                        successKey = key;
+                        break;
+                    } catch (error) {
+                        console.error(`Debug: Failed with key ${key}:`, error);
+                    }
+                }
+                
+                if (successKey) {
+                    alert(`Razorpay initialized successfully with key: ${successKey}`);
+                    
+                    // Create a direct payment option
+                    const directPayOptions = {
+                        key: successKey,
+                        order_id: orderId,
+                        name: 'Blood Bank',
+                        description: 'Blood Payment',
+                        handler: function(response) {
+                            console.log('Direct payment successful:', response);
+                            alert('Payment was successful! Refreshing page...');
+                            window.location.reload();
+                        },
+                        theme: {
+                            color: '#F37254'
+                        }
+                    };
+                    
+                    // Ask if they want to try direct payment
+                    if (confirm('Do you want to try a direct payment with the working key?')) {
+                        const rzpDirect = new Razorpay(directPayOptions);
+                        rzpDirect.open();
+                    }
+                } else {
+                    alert('Failed to initialize Razorpay with any test key');
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,56 @@
+{% extends 'blood/base.html' %}
+{% load static %}
+
+{% block title %}Logged Out{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="custom-card text-center">
+                <div class="mb-4">
+                    <img src="{% static 'image/logout.png' %}" alt="Logout" class="img-fluid" style="max-width: 150px;">
+                </div>
+                <h1 class="display-4 mb-4">Logged Out</h1>
+                <p class="lead mb-4">Thank you for using Blood Bank Management System. You have been successfully logged out.</p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center">
+                    <a href="{% url 'home' %}" class="btn btn-primary btn-lg mb-3 mb-sm-0 mr-sm-3">
+                        <i class="fas fa-home"></i> Return Home
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Log In Again
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-card {
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background: white;
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 576px) {
+        .custom-card {
+            padding: 2rem;
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+        }
+
+        .lead {
+            font-size: 1.1rem;
+        }
+
+        .btn-lg {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

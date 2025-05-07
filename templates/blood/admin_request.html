@@ -1,0 +1,203 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{%load static%}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            {% if requests %}
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-primary mb-4">Blood Requests</h4>
+                    {% if message %}
+                        <div class="alert alert-danger mb-4">{{ message }}</div>
+                    {% endif %}
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Patient Name</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col" class="d-none d-md-table-cell">Reason</th>
+                                    <th scope="col">Blood Group</th>
+                                    <th scope="col">Units</th>
+                                    <th scope="col" class="d-none d-md-table-cell">Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Payment</th>
+                                    <th scope="col" class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in requests %}
+                                <tr>
+                                    <td>{{t.patient_name}}</td>
+                                    <td>{{t.patient_age}}</td>
+                                    <td class="d-none d-md-table-cell">{{t.reason}}</td>
+                                    <td>{{t.bloodgroup}}</td>
+                                    <td>{{t.unit}}</td>
+                                    <td class="d-none d-md-table-cell">{{t.request_date}}</td>
+                                    <td>
+                                        <span class="badge {% if t.status == 'Approved' %}badge-success{% elif t.status == 'Rejected' %}badge-danger{% else %}badge-warning{% endif %}">
+                                            {{t.status}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if t.payment %}
+                                            {% if t.payment.status == 'Completed' %}
+                                                <span class="badge badge-success">Paid</span>
+                                                {% if t.payment.razorpay_payment_id %}
+                                                    <span class="payment-info" data-toggle="tooltip" title="Payment ID: {{ t.payment.razorpay_payment_id }}">
+                                                        <i class="fas fa-info-circle text-info ml-1"></i>
+                                                    </span>
+                                                {% endif %}
+                                            {% elif t.payment.status == 'Pending' %}
+                                                <span class="badge badge-warning">Pending</span>
+                                            {% else %}
+                                                <span class="badge badge-danger">Failed</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge badge-secondary">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="btn-group">
+                                            <a href="{% url 'update-approve-status' t.id %}" class="btn btn-sm btn-success mr-2">
+                                                <i class="fas fa-check mr-1"></i> Approve
+                                            </a>
+                                            <a href="{% url 'update-reject-status' t.id %}" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-times mr-1"></i> Reject
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Blood Requests Available</h5>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th {
+        border-top: none;
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+    }
+
+    .table td, .table th {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-size: 0.875em;
+        font-weight: 500;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .btn-group .btn {
+        border-radius: 8px;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .text-primary {
+        color: #086fd6 !important;
+    }
+
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding: 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .table td, .table th {
+            padding: 0.75rem;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-group .btn {
+            margin: 0.25rem 0;
+            width: 100%;
+        }
+
+        .mr-2 {
+            margin-right: 0 !important;
+        }
+    }
+    
+    /* Payment info styles */
+    .payment-info {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+    
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips if Bootstrap is loaded
+        if (typeof $().tooltip === 'function') {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,105 @@
+{% extends 'donor/donorbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{%load static%}
+<head>
+    <style>
+        .label {
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+   
+        .success { background-color: #28a745; }  /* Green for Approved */
+        .danger { background-color: #dc3545; }   /* Red for Rejected */
+        .info { background-color: #17a2b8; }     /* Blue for Pending */
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-warning {
+            color: #856404;
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .table thead {
+            background-color: #ff0018 !important;
+            color: white;
+        }
+
+        .table thead th {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h4 class="text-center mb-4">My Donation History</h4>
+    
+    <div class="table-responsive">
+        <table class="table table-light table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Donor Age</th>
+                    <th scope="col">Disease (if any)</th>
+                    <th scope="col">Blood Group</th>
+                    <th scope="col">Unit</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in donations %}
+                <tr>
+                    <td>{{t.age}}</td>
+                    <td>{{t.disease}}</td>
+                    <td>{{t.bloodgroup}}</td>
+                    <td>{{t.unit}}</td>
+                    <td>{{t.date}}</td>
+                    {% if t.status == 'Approved' %}
+                    <td><span class="label success">Approved</span></td>
+                    {% elif t.status == 'Rejected' %}
+                    <td><span class="label danger">Rejected</span></td>
+                    {% else %}
+                    <td><span class="label info">Pending</span></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

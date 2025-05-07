@@ -1,0 +1,261 @@
+{% extends 'donor/donorbase.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-primary mb-4">
+                        <i class="fas fa-hand-holding-medical mr-2"></i>Donate Blood
+                    </h4>
+
+                    <form method="post" autocomplete="off" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-notes-medical mr-2"></i>Disease (if any)</label>
+                                    {% render_field donation_form.disease class="form-control" placeholder="Enter Disease (if any)" %}
+                                    {% if donation_form.disease.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ donation_form.disease.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user-clock mr-2"></i>Age</label>
+                                    {% render_field donation_form.age|attr:'required:true' class="form-control" placeholder="Enter Age" %}
+                                    {% if donation_form.age.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ donation_form.age.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-tint mr-2"></i>Blood Group</label>
+                                    {% render_field donation_form.bloodgroup class="form-control" %}
+                                    {% if donation_form.bloodgroup.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ donation_form.bloodgroup.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-flask mr-2"></i>Units</label>
+                                    {% render_field donation_form.unit|attr:'required:true' class="form-control" placeholder="Enter Units" %}
+                                    {% if donation_form.unit.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ donation_form.unit.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane mr-2"></i>Submit Donation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-primary mb-4">
+                        <i class="fas fa-history mr-2"></i>Your Donation History
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Disease</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Blood Group</th>
+                                    <th scope="col">Units</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in donations %}
+                                <tr>
+                                    <td>{{t.disease}}</td>
+                                    <td>{{t.age}}</td>
+                                    <td>
+                                        <span class="badge badge-danger">
+                                            <i class="fas fa-tint mr-1"></i>{{t.bloodgroup}}
+                                        </span>
+                                    </td>
+                                    <td>{{t.unit}}</td>
+                                    <td>{{t.date}}</td>
+                                    <td>
+                                        {% if t.status == "Approved" %}
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check-circle mr-1"></i>Approved
+                                        </span>
+                                        {% elif t.status == "Rejected" %}
+                                        <span class="badge badge-danger">
+                                            <i class="fas fa-times-circle mr-1"></i>Rejected
+                                        </span>
+                                        {% else %}
+                                        <span class="badge badge-warning">
+                                            <i class="fas fa-clock mr-1"></i>Pending
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="empty-state">
+                                            <i class="fas fa-file-medical-alt empty-icon mb-3"></i>
+                                            <p class="empty-text">No donation records found</p>
+                                            <p class="empty-subtext text-muted">Records will appear here once you make a donation</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .text-primary {
+        color: #343a40 !important;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.75rem 1rem;
+        height: auto;
+        font-size: 0.875rem;
+    }
+
+    .form-control:focus {
+        border-color: #343a40;
+        box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.25);
+    }
+
+    .form-group label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-primary {
+        background-color: #343a40;
+        border-color: #343a40;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+    }
+
+    .btn-primary:hover {
+        background-color: #23272b;
+        border-color: #23272b;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th {
+        border-top: none;
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+    }
+
+    .table td, .table th {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-size: 0.875em;
+        font-weight: 500;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    @media (max-width: 767.98px) {
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .table td, .table th {
+            padding: 0.75rem;
+        }
+    }
+
+    /* Empty state styling */
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        color: #adb5bd;
+    }
+    
+    .empty-text {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-subtext {
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock content %}

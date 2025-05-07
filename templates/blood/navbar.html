@@ -1,0 +1,139 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #FF0018;">
+    <div class="container">
+        <a href="{% url 'home' %}" class="navbar-brand">
+            <i class="fas fa-heartbeat"></i>&nbsp; Blood Bank Management
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <i class="fas fa-home"></i>&nbsp; Home
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                    {% if request.user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin-dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if request.user.is_donor %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'donor-dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if request.user.is_patient %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'patient-dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link logout-btn" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i>&nbsp; Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'patientlogin' %}">
+                            <i class="fas fa-procedures"></i>&nbsp; Patient
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'donorlogin' %}">
+                            <i class="fas fa-user"></i>&nbsp; Donor
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'adminlogin' %}">
+                            <i class="fas fa-user-shield"></i>&nbsp; Admin
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">
+                            <i class="fas fa-phone"></i>&nbsp; Contact Us
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .navbar {
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+    
+    .nav-link {
+        color: white !important;
+        opacity: 0.9;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem !important;
+        border-radius: 5px;
+    }
+    
+    .nav-link:hover {
+        opacity: 1;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .logout-btn {
+        background-color: rgba(255, 255, 255, 0.1);
+        margin-left: 0.5rem;
+    }
+
+    .logout-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Add spacing below navbar to prevent content overlap */
+    body {
+        padding-top: 76px;
+    }
+    
+    /* Mobile adjustments */
+    @media (max-width: 991.98px) {
+        .navbar-nav {
+            padding-top: 1rem;
+        }
+        
+        .nav-item {
+            padding: 0.25rem 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem !important;
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .logout-btn {
+            margin: 0.5rem 0 0 0;
+            text-align: left;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+</style>

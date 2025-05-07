@@ -1,0 +1,260 @@
+{% extends 'patient/patientbase.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h4 class="text-primary mb-4">
+                <i class="fas fa-tachometer-alt mr-2"></i>Patient Dashboard
+            </h4>
+        </div>
+    </div>
+
+    <!-- Blood Request Statistics -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Total Requests</h5>
+                        <div class="icon-box">
+                            <i class="fas fa-sync-alt fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                    <h3 class="card-text text-primary">{{requestmade}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Pending</h5>
+                        <div class="icon-box">
+                            <i class="fas fa-clock fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                    <h3 class="card-text text-warning">{{requestpending}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Approved</h5>
+                        <div class="icon-box">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                        </div>
+                    </div>
+                    <h3 class="card-text text-success">{{requestapproved}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Rejected</h5>
+                        <div class="icon-box">
+                            <i class="fas fa-times-circle fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                    <h3 class="card-text text-danger">{{requestrejected}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Blood Requests Table -->
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-primary mb-4">
+                        <i class="fas fa-history mr-2"></i>Recent Blood Requests
+                    </h5>
+                    <div class="table-responsive">
+                        {% if recent_requests %}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Blood Group</th>
+                                    <th>Units</th>
+                                    <th>Total Cost</th>
+                                    <th>Status</th>
+                                    <th>Payment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in recent_requests %}
+                                <tr>
+                                    <td>{{ request.request_date }}</td>
+                                    <td>{{ request.bloodgroup }}</td>
+                                    <td>{{ request.unit }}</td>
+                                    <td>₹{% if request.total_cost_display %}{{ request.total_cost_display }}{% else %}{{ request.total_cost }}{% endif %}</td>
+                                    <td>
+                                        {% if request.status == 'Approved' %}
+                                        <span class="badge badge-success">{{ request.status }}</span>
+                                        {% elif request.status == 'Pending' %}
+                                        <span class="badge badge-warning">{{ request.status }}</span>
+                                        {% elif request.status == 'Rejected' %}
+                                        <span class="badge badge-danger">{{ request.status }}</span>
+                                        {% elif request.status == 'Completed' %}
+                                        <span class="badge badge-info">{{ request.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if request.status == 'Completed' %}
+                                        <span class="badge badge-success">Paid</span>
+                                        {% elif request.status == 'Approved' %}
+                                        <a href="{% url 'my-request' %}" class="btn btn-sm btn-primary">Pay Now</a>
+                                        {% else %}
+                                        <span class="badge badge-secondary">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle mr-2"></i>You don't have any blood requests yet.
+                        </div>
+                        {% endif %}
+                        
+                        <div class="text-center mt-3">
+                            <a href="{% url 'make-request' %}" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>Make New Request
+                            </a>
+                            <a href="{% url 'request-history' %}" class="btn btn-outline-primary ml-2">
+                                <i class="fas fa-history mr-2"></i>View All History
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .icon-box {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    .text-primary { color: #007bff !important; }
+    .text-warning { color: #ffc107 !important; }
+    .text-success { color: #28a745 !important; }
+    .text-danger { color: #dc3545 !important; }
+
+    h3 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    h4 {
+        font-weight: 600;
+    }
+
+    h5 {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    .badge {
+        padding: 0.35em 0.65em;
+        font-size: 0.75em;
+        font-weight: 700;
+    }
+    
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+    
+    .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 15px;
+        }
+
+        .card {
+            margin-bottom: 15px;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+        }
+
+        .icon-box {
+            width: 40px;
+            height: 40px;
+        }
+
+        .fa-2x {
+            font-size: 1.5em;
+        }
+    }
+</style>
+{% endblock content %}

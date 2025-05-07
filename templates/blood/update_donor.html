@@ -1,0 +1,145 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{% load static %}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-primary mb-4">
+                        <i class="fas fa-user-edit mr-2"></i>Update Donor
+                    </h4>
+
+                    <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    {% render_field userForm.username class="form-control" placeholder="Username" %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    {% render_field userForm.password class="form-control" placeholder="Password" %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Blood Group</label>
+                                    {% render_field donorForm.bloodgroup class="form-control" %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Mobile</label>
+                                    {% render_field donorForm.mobile class="form-control" placeholder="Mobile Number" %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    {% render_field donorForm.address class="form-control" placeholder="Address" %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Profile Picture</label>
+                                    {% render_field donorForm.profile_pic class="form-control-file" %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save mr-2"></i>Update Donor
+                            </button>
+                            <a href="{% url 'admin-donor' %}" class="btn btn-secondary ml-2">
+                                <i class="fas fa-times mr-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-group label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.75rem 1rem;
+        height: auto;
+        font-size: 0.875rem;
+    }
+
+    .form-control:focus {
+        border-color: #086fd6;
+        box-shadow: 0 0 0 0.2rem rgba(8, 111, 214, 0.25);
+    }
+
+    .btn {
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background-color: #086fd6;
+        border-color: #086fd6;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    @media (max-width: 767.98px) {
+        .card-body {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock content %}

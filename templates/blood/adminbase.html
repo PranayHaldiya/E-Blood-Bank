@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.css">
+    <style>
+        :root {
+            --primary-color: #086fd6;
+            --secondary-color: #594f8d;
+            --danger-color: #ff0018;
+            --text-light: #bdb8d7;
+            --text-dark: #717171;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            background: #f3f5f9;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: var(--danger-color) !important;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .nav-link {
+            color: white !important;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: calc(100vh - 76px);
+            margin-top: 76px;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: calc(100vh - 76px);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li {
+            padding: 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }    
+
+        .sidebar ul li a {
+            color: var(--text-light);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a .fas {
+            width: 25px;
+            margin-right: 10px;
+        }
+
+        .sidebar ul li:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar ul li:hover a {
+            color: white;
+            padding-left: 2rem;
+        }
+
+        .main_content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .blood-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .fa-tint { color: var(--danger-color); }
+        .fa-users { color: var(--primary-color); }
+        .fa-spinner { color: var(--primary-color); }
+        .fa-check-circle { color: var(--primary-color); }
+        .xyz { color: var(--primary-color); }
+
+        /* Mobile Responsive */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                margin-left: calc(-1 * var(--sidebar-width));
+            }
+
+            .sidebar.active {
+                margin-left: 0;
+            }
+
+            .main_content {
+                margin-left: 0;
+            }
+
+            .main_content.active {
+                margin-left: var(--sidebar-width);
+            }
+
+            .navbar-toggler {
+                display: block;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            :root {
+                --sidebar-width: 100%;
+            }
+
+            .wrapper {
+                margin-top: 62px;
+            }
+
+            .sidebar {
+                height: calc(100vh - 62px);
+            }
+
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+
+            .main_content {
+                padding: 1rem;
+            }
+        }
+
+        /* Toggle Button */
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: none;
+        }
+
+        @media (max-width: 991.98px) {
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <button class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fab fa-gratipay"></i>&nbsp;Blood Bank Management
+        </a>
+        
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">
+                        Logout &nbsp;<i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        <div class="sidebar" id="sidebar">
+            <ul>
+                <li><a href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="{% url 'admin-donor' %}"><i class="fas fa-user"></i>Donor</a></li>
+                <li><a href="{% url 'admin-patient' %}"><i class="fas fa-user-injured"></i>Patient</a></li>
+                <li><a href="{% url 'admin-donation' %}"><i class="fas fa-hand-holding-medical"></i>Donations</a></li>
+                <li><a href="{% url 'admin-request' %}"><i class="fas fa-sync-alt"></i>Blood Requests</a></li>
+                <li><a href="{% url 'admin-request-history' %}"><i class="fas fa-history"></i>Request History</a></li>
+                <li><a href="{% url 'admin-blood' %}"><i class="fas fa-hand-holding-water"></i>Blood Stock</a></li>
+            </ul>
+        </div>
+
+        <div class="main_content" id="main">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#menu-toggle').click(function(e) {
+                e.preventDefault();
+                $('#sidebar').toggleClass('active');
+                $('#main').toggleClass('active');
+            });
+
+            // Close sidebar on mobile when clicking a link
+            if ($(window).width() < 992) {
+                $('.sidebar a').click(function() {
+                    $('#sidebar').removeClass('active');
+                    $('#main').removeClass('active');
+                });
+            }
+
+            // Handle window resize
+            $(window).resize(function() {
+                if ($(window).width() > 991.98) {
+                    $('#sidebar').removeClass('active');
+                    $('#main').removeClass('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

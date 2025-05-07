@@ -1,0 +1,112 @@
+{% extends 'patient/patientbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow border-0">
+        <div class="card-header bg-gradient-primary text-white">
+            <h4 class="mb-0 font-weight-bold"><i class="fas fa-history mr-2"></i>Completed Blood Requests</h4>
+        </div>
+        <div class="card-body">
+            {% if requests %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Request Date</th>
+                            <th>Blood Group</th>
+                            <th>Units</th>
+                            <th>Cost per Unit</th>
+                            <th>Total Cost</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in requests %}
+                        <tr>
+                            <td>{{request.request_date}}</td>
+                            <td>{{request.bloodgroup}}</td>
+                            <td>{{request.unit}}</td>
+                            <td>₹{{request.cost_at_request}}</td>
+                            <td>₹{{request.total_cost}}</td>
+                            <td>
+                                {% if request.status == 'Approved' %}
+                                <span class="badge badge-success">{{request.status}}</span>
+                                {% elif request.status == 'Completed' %}
+                                <span class="badge badge-info">{{request.status}} <i class="fas fa-check-circle"></i></span>
+                                {% else %}
+                                <span class="badge badge-danger">{{request.status}}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i>You don't have any completed blood requests yet.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .card-header {
+        border-top-left-radius: 10px !important;
+        border-top-right-radius: 10px !important;
+        padding: 15px 20px;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #3a6073, #16222a);
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-size: 0.875rem;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+    }
+    
+    .badge-info {
+        background-color: #17a2b8;
+    }
+    
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+</style>
+{% endblock content %}

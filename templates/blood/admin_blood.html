@@ -1,0 +1,339 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+
+<div class="container-fluid">
+    <!-- Blood Stock Overview -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary mb-4">Blood Stock Management</h2>
+        </div>
+    </div>
+
+    <!-- Positive Blood Groups -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if A1.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>A+ <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{A1.unit}} Units</h4>
+                        {% if A1.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{A1.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{A1.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if B1.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>B+ <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{B1.unit}} Units</h4>
+                        {% if B1.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{B1.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{B1.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if O1.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>O+ <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{O1.unit}} Units</h4>
+                        {% if O1.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{O1.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{O1.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if AB1.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>AB+ <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{AB1.unit}} Units</h4>
+                        {% if AB1.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{AB1.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{AB1.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Negative Blood Groups -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if A2.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>A- <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{A2.unit}} Units</h4>
+                        {% if A2.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{A2.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{A2.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if B2.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>B- <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{B2.unit}} Units</h4>
+                        {% if B2.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{B2.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{B2.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if O2.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>O- <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{O2.unit}} Units</h4>
+                        {% if O2.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{O2.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{O2.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card {% if AB2.unit > 0 %}bg-white{% else %}bg-light{% endif %} h-100">
+                <div class="card-body text-center">
+                    <div class="blood-icon">
+                        <h3>AB- <i class="fas fa-tint"></i></h3>
+                    </div>
+                    <div class="mt-3">
+                        <h4 class="font-weight-bold">{{AB2.unit}} Units</h4>
+                        {% if AB2.unit > 0 %}
+                            <p class="text-success mb-0">Available</p>
+                            <p class="text-primary mt-2">₹{{AB2.cost_per_unit}} per unit</p>
+                        {% else %}
+                            <p class="text-danger mb-0">Out of Stock</p>
+                            <p class="text-muted mt-2">₹{{AB2.cost_per_unit}} per unit</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Blood Stock Form -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="text-primary mb-4">Update Blood Stock</h3>
+                    <form method="POST" action="{% url 'admin-blood' %}" class="update-form">
+                        {% csrf_token %}
+                        {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-row align-items-center justify-content-center">
+                            <div class="col-md-3 col-sm-12 mb-3">
+                                <select name="bloodgroup" class="form-control" required>
+                                    <option value="" disabled selected>Choose Blood Group</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-sm-12 mb-3">
+                                <input type="number" class="form-control" name="unit" placeholder="Enter Units" min="0" required>
+                            </div>
+                            <div class="col-md-3 col-sm-12 mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">₹</span>
+                                    </div>
+                                    <input type="number" class="form-control" name="cost_per_unit" placeholder="Cost per Unit" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-12 mb-3">
+                                <button type="submit" class="btn btn-primary btn-block">Update Stock</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .blood-icon {
+        color: #dc3545;
+    }
+
+    .blood-icon .fa-tint {
+        margin-left: 5px;
+    }
+
+    .text-primary {
+        color: #086fd6 !important;
+    }
+
+    .text-success {
+        color: #28a745 !important;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+        opacity: 0.8;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #086fd6;
+        box-shadow: 0 0 0 0.2rem rgba(8, 111, 214, 0.25);
+    }
+
+    .input-group-text {
+        border-radius: 10px 0 0 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-right: none;
+    }
+
+    .input-group .form-control {
+        border-radius: 0 10px 10px 0;
+    }
+
+    .btn-primary {
+        background-color: #086fd6;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0656a3;
+        transform: translateY(-2px);
+    }
+
+    .update-form {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding: 1rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+        }
+
+        .blood-icon h3 {
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .form-row {
+            margin: 0;
+        }
+    }
+</style>
+{% endblock content %}

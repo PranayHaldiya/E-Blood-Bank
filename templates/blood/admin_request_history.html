@@ -1,0 +1,242 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{%load static%}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="text-primary mb-0">Blood Request History</h4>
+                        <a href="{% url 'download-request-history-pdf' %}" class="btn btn-primary">
+                            <i class="fas fa-file-pdf mr-2"></i>Download PDF
+                        </a>
+                    </div>
+                    
+                    {% if message %}
+                        <div class="alert alert-danger mb-4">{{ message }}</div>
+                    {% endif %}
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Request Date</th>
+                                    <th>Patient Name</th>
+                                    <th>Age</th>
+                                    <th>Blood Group</th>
+                                    <th>Units</th>
+                                    <th>Cost per Unit</th>
+                                    <th>Total Cost</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Payment Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in requests %}
+                                <tr>
+                                    <td>{{request.request_date}}</td>
+                                    <td>{{request.patient_name}}</td>
+                                    <td>{{request.patient_age}}</td>
+                                    <td>{{request.bloodgroup}}</td>
+                                    <td>{{request.unit}}</td>
+                                    <td>₹{{request.cost_at_request}}</td>
+                                    <td>₹{{request.total_cost}}</td>
+                                    <td>{{request.reason}}</td>
+                                    <td>
+                                        {% if request.status == 'Approved' %}
+                                        <span class="badge badge-success">{{request.status}}</span>
+                                        {% elif request.status == 'Completed' %}
+                                        <span class="badge badge-info">{{request.status}}</span>
+                                        {% else %}
+                                        <span class="badge badge-danger">{{request.status}}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if request.payment %}
+                                            {% if request.payment.status == 'Completed' %}
+                                                <span class="badge badge-success">Paid</span>
+                                                {% if request.payment.razorpay_payment_id %}
+                                                    <span class="payment-info" data-toggle="tooltip" title="Payment ID: {{ request.payment.razorpay_payment_id }}">
+                                                        <i class="fas fa-info-circle text-info ml-1"></i>
+                                                    </span>
+                                                    <div class="payment-details">
+                                                        <small class="d-block text-muted">ID: {{ request.payment.razorpay_payment_id|truncatechars:10 }}</small>
+                                                        {% if request.payment_date_display %}
+                                                            <small class="d-block text-muted">Date: {{ request.payment_date_display }}</small>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endif %}
+                                            {% elif request.payment.status == 'Pending' %}
+                                                <span class="badge badge-warning">Payment Pending</span>
+                                            {% else %}
+                                                <span class="badge badge-danger">Payment Failed</span>
+                                            {% endif %}
+                                        {% elif request.status == 'Approved' %}
+                                            <span class="badge badge-secondary">Not Paid</span>
+                                        {% elif request.status == 'Rejected' %}
+                                            <span class="badge badge-secondary">N/A</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th {
+        border-top: none;
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+    }
+
+    .table td, .table th {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-size: 0.875em;
+        font-weight: 500;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .text-primary {
+        color: #086fd6 !important;
+    }
+
+    .btn-primary {
+        background-color: #086fd6;
+        border-color: #086fd6;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #065bb1;
+        border-color: #065bb1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(8, 111, 214, 0.2);
+    }
+
+    .btn-primary i {
+        margin-right: 0.5rem;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .payment-info {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+    
+    .text-muted {
+        color: #6c757d;
+        font-size: 0.75rem;
+    }
+    
+    .payment-details {
+        margin-top: 0.25rem;
+        padding-left: 0.25rem;
+        border-left: 2px solid #28a745;
+    }
+    
+    .d-block {
+        display: block;
+    }
+
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding: 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .table td, .table th {
+            padding: 0.75rem;
+        }
+
+        .badge {
+            display: inline-block;
+            white-space: normal;
+            text-align: center;
+            width: 100%;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 1rem;
+            order: 2;
+        }
+
+        .d-flex {
+            flex-direction: column;
+        }
+
+        h4.text-primary {
+            order: 1;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips if Bootstrap is loaded
+        if (typeof $().tooltip === 'function') {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+    });
+</script>
+{% endblock content %}
